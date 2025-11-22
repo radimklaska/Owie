@@ -77,11 +77,6 @@ void BatteryFuelGauge::updateVoltage(int32_t voltageMillivolts,
 
 void BatteryFuelGauge::updateCurrent(int32_t currentMilliamps,
                                      int32_t nowMillis) {
-  // Ignore current updates until we see first voltage message
-  if (voltage_millivolts_ < 0) {
-    return;
-  }
-
   defer { last_current_update_time_millis_ = nowMillis; };
   if (last_current_update_time_millis_ < 0) {
     return;
