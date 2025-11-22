@@ -4,21 +4,21 @@ jobs:
   build_and_test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Cache pip
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
       - name: Cache PlatformIO
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.platformio
           key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
       - name: Install PlatformIO and html-minifier-terser
         run: |
           python -m pip install --upgrade pip
@@ -31,7 +31,7 @@ jobs:
       - name: Build Owie
         run: pio run -e d1_mini_lite_clone
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: firmware
           path: .pio/build/d1_mini_lite_clone/firmware.bin
