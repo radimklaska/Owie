@@ -119,6 +119,19 @@ String generateOwieStatusJson() {
   status["CELL_VOLTAGE_TABLE"] = out;
   status["TEMPERATURE_TABLE"] = getTempString();
 
+  // BMS Serial Numbers
+  char hexBuf[16];
+  uint32_t capturedSerial = relay->getCapturedBMSSerial();
+  uint32_t overrideSerial = relay->getBMSSerialOverride();
+
+  status["RECEIVED_SERIAL_DEC"] = String(capturedSerial);
+  snprintf(hexBuf, sizeof(hexBuf), "0x%X", capturedSerial);
+  status["RECEIVED_SERIAL_HEX"] = String(hexBuf);
+
+  status["SENT_SERIAL_DEC"] = String(overrideSerial);
+  snprintf(hexBuf, sizeof(hexBuf), "0x%X", overrideSerial);
+  status["SENT_SERIAL_HEX"] = String(hexBuf);
+
   serializeJson(status, jsonOutput);
   return jsonOutput;
 }
@@ -194,6 +207,18 @@ String templateProcessor(const String &var) {
     return out;
   } else if (var == "TEMPERATURE_TABLE") {
     return getTempString();
+  } else if (var == "RECEIVED_SERIAL_DEC") {
+    return String(relay->getCapturedBMSSerial());
+  } else if (var == "RECEIVED_SERIAL_HEX") {
+    char hexBuf[16];
+    snprintf(hexBuf, sizeof(hexBuf), "0x%X", relay->getCapturedBMSSerial());
+    return String(hexBuf);
+  } else if (var == "SENT_SERIAL_DEC") {
+    return String(relay->getBMSSerialOverride());
+  } else if (var == "SENT_SERIAL_HEX") {
+    char hexBuf[16];
+    snprintf(hexBuf, sizeof(hexBuf), "0x%X", relay->getBMSSerialOverride());
+    return String(hexBuf);
   } else if (var == "AP_PASSWORD") {
     return Settings->ap_self_password;
   } else if (var == "AP_SELF_NAME") {
