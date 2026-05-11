@@ -121,6 +121,11 @@ void BatteryFuelGauge::onHighestCharge() {
 }
 
 void BatteryFuelGauge::onHighestDischarge() {
+  // Skip until we have a voltage-derived SOC; otherwise the unsigned
+  // comparisons below would assign the sentinel -1 to bottomSoc.
+  if (voltage_based_soc_ < 0) {
+    return;
+  }
   // Maintain an invariant of topSoc >= bottomSoc
   if (voltage_based_soc_ > state_.topSoc) {
     return;
